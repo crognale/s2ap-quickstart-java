@@ -12,7 +12,6 @@ import com.google.api.services.walletobjects.model.Image;
 import com.google.api.services.walletobjects.model.LatLongPoint;
 import com.google.api.services.walletobjects.model.LinksModuleData;
 import com.google.api.services.walletobjects.model.Money;
-import com.google.api.services.walletobjects.model.RenderSpec;
 import com.google.api.services.walletobjects.model.TextModuleData;
 import com.google.api.services.walletobjects.model.Uri;
 
@@ -84,17 +83,6 @@ public class GiftCard {
   public static GiftCardClass generateGiftCardClass(String issuerId,
       String classId) {
 
-    // Define rendering templates per view
-    List<RenderSpec> renderSpec = new ArrayList<RenderSpec>();
-
-    RenderSpec listRenderSpec = new RenderSpec().setViewName("g_list")
-        .setTemplateFamily("1.giftCard1_list");
-    RenderSpec expandedRenderSpec = new RenderSpec().setViewName("g_expanded")
-        .setTemplateFamily("1.giftCard1_expanded");
-
-    renderSpec.add(listRenderSpec);
-    renderSpec.add(expandedRenderSpec);
-
     // Define Text Module Data
     List<TextModuleData> textModulesData = new ArrayList<TextModuleData>();
 
@@ -116,6 +104,10 @@ public class GiftCard {
     locations.add(new LatLongPoint().setLatitude(37.422601).setLongitude(
         -122.085286));
 
+		//Define hero image
+		Image heroImage = new Image().setSourceUri(new Uri()
+				.setUri("http://farm4.staticflickr.com/3738/12440799783_3dc3c20606_b.jpg"));
+
     // Create class
     GiftCardClass wobClass = new GiftCardClass()
         .setId(issuerId + "." + classId)
@@ -126,8 +118,9 @@ public class GiftCard {
                 .setUri("http://farm8.staticflickr.com/7340/11177041185_a61a7f2139_o.jpg")))
         .setTextModulesData(textModulesData)
         .setLinksModuleData(linksModuleData)
-        .setRenderSpecs(renderSpec)
         .setReviewStatus("underReview").setAllowMultipleUsersPerObject(true)
+				.setHeroImage(heroImage)
+				.setHexBackgroundColor("#5dba67")
         .setLocations(locations);
 
     return wobClass;

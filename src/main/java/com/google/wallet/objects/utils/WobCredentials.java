@@ -19,18 +19,16 @@ import java.util.List;
  * Class to define Wallet Object related credentials. These credentials are used
  * with WobUtils to simplify the OAuth token generation and JWT signing.
  * <p/>
- * If you're using a key file, specify the privateKeyPath using the first
- * constructor. If you've defined the private key as a base 64 encoded string,
- * convert it to an RSAPrivate Key with WobUtils.getRsaPrivateKey.
+ * If you're using a key file, specify the jsonKeyPath using the first
+ * constructor. 
  *
- * @author pying
+ * @author pying, crognale
  */
 public class WobCredentials {
   String serviceAccountId;
-  String serviceAccountPrivateKeyPath;
+  String serviceAccountJsonKeyPath;
   String applicationName;
   String issuerId;
-  private RSAPrivateKey serviceAccountPrivateKey;
   public static final HttpTransport httpTransport = new NetHttpTransport();
   public static final JsonFactory jsonFactory = new GsonFactory();
 
@@ -42,39 +40,22 @@ public class WobCredentials {
 
 
   /**
-   * Constructor for defining a path to your key.p12 file.
+   * Constructor for defining a path to your key.json file.
    *
    * @param serviceAccountId
-   * @param privateKeyPath
+   * @param jsonKeyPath
    * @param applicationName
    * @param issuerId
    */
-  public WobCredentials(String serviceAccountId, String privateKeyPath,
+  public WobCredentials(String serviceAccountId, String jsonKeyPath,
       String applicationName, String issuerId) throws IOException, GeneralSecurityException {
     setServiceAccountId(serviceAccountId);
-    setServiceAccountPrivateKeyPath(privateKeyPath);
+		setServiceAccountJsonKeyPath(jsonKeyPath);
     setApplicationName(applicationName);
     setIssuerId(issuerId);
-    generateRsaKey();
     generateGoogleCredential();
   }
 
-  /**
-   * Constructor for a base64 encoded private key String.
-   *
-   * @param serviceAccountId
-   * @param privateKey
-   * @param applicationName
-   * @param issuerId
-   */
-  public WobCredentials(String serviceAccountId, RSAPrivateKey privateKey,
-      String applicationName, String issuerId) {
-    setServiceAccountId(serviceAccountId);
-    setServiceAccountPrivateKey(privateKey);
-    setApplicationName(applicationName);
-    setIssuerId(issuerId);
-    generateGoogleCredential();
-  }
 
   /**
    * Helper function to generate the Google Credential
@@ -82,36 +63,11 @@ public class WobCredentials {
    * @return
    * @throws GeneralSecurityException
    * @throws IOException
+	 * @throws FileNotFoundException
    */
-  private void generateGoogleCredential() {
-    gCredential = new GoogleCredential.Builder().setTransport(httpTransport).setJsonFactory(jsonFactory)
-        .setServiceAccountId(serviceAccountId).setServiceAccountScopes(scopes)
-        .setServiceAccountPrivateKey(serviceAccountPrivateKey).build();
-  }
-
-  private void generateRsaKey() throws IOException, GeneralSecurityException {
-    File file = new File(serviceAccountPrivateKeyPath);
-    System.out.println("Key Path: " + file.getAbsolutePath());
-
-    byte[] bytes = ByteStreams.toByteArray(new FileInputStream(file));
-    InputStream keyStream = new ByteArrayInputStream(bytes);
-    serviceAccountPrivateKey = (RSAPrivateKey) SecurityUtils.loadPrivateKeyFromKeyStore(
-        SecurityUtils.getPkcs12KeyStore(), keyStream, "notasecret",
-        "privatekey", "notasecret");
-  }
-
-  /**
-   * @return the serviceAccountPrivateKey
-   */
-  public RSAPrivateKey getServiceAccountPrivateKey() {
-    return serviceAccountPrivateKey;
-  }
-
-  /**
-   * @param serviceAccountPrivateKey the serviceAccountPrivateKey to set
-   */
-  public void setServiceAccountPrivateKey(RSAPrivateKey serviceAccountPrivateKey) {
-    this.serviceAccountPrivateKey = serviceAccountPrivateKey;
+  private void generateGoogleCredential() throws IOException, FileNotFoundException {
+		InputStream keyAsStream = new FileInputStream(serviceAccountJsonKeyPath);
+		gCredential = GoogleCredential.fromStream(keyAsStream).createScoped(scopes);
   }
 
   /**
@@ -121,6 +77,13 @@ public class WobCredentials {
     return serviceAccountId;
   }
 
+	/**
+	 * @return the private key needed to sign JWTs
+	 */
+	public RSAPrivateKey getRsaPrivateKey() {
+		return (RSAPrivateKey) gCredential.getServiceAccountPrivateKey();
+	}
+
   /**
    * @param serviceAccountId the serviceAccountId to set
    */
@@ -129,17 +92,17 @@ public class WobCredentials {
   }
 
   /**
-   * @return the serviceAccountPrivateKey
+   * @return the serviceAccountJsonKeyPath
    */
-  public String getServiceAccountPrivateKeyPath() {
-    return serviceAccountPrivateKeyPath;
+  public String getServiceAccountJsonKeyPath() {
+    return serviceAccountJsonKeyPath;
   }
 
   /**
-   * @param serviceAccountPrivateKey the serviceAccountPrivateKey to set
+   * @param serviceAccountJsonKeyPath the serviceAccountJsonKey to set
    */
-  public void setServiceAccountPrivateKeyPath(String serviceAccountPrivateKey) {
-    this.serviceAccountPrivateKeyPath = serviceAccountPrivateKey;
+  public void setServiceAccountJsonKeyPath(String serviceAccountJsonKey) {
+    this.serviceAccountJsonKeyPath = serviceAccountJsonKey;
   }
 
   /**
@@ -172,8 +135,8 @@ public class WobCredentials {
 
   public String toString() {
     StringBuilder sb =
-        new StringBuilder().append(serviceAccountId).append(serviceAccountPrivateKeyPath).append(applicationName)
-            .append(issuerId).append(new String(serviceAccountPrivateKey.getEncoded()));
+        new StringBuilder().append(serviceAccountId).append(serviceAccountJsonKeyPath).append(applicationName)
+            .append(issuerId);
     return sb.toString();
   }
 

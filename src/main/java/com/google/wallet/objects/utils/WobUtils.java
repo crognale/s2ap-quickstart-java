@@ -75,7 +75,7 @@ public class WobUtils {
    */
   public WobUtils(WobCredentials credentials) throws IOException, GeneralSecurityException {
     serviceAccountId = credentials.getServiceAccountId();
-    signer = new RsaSHA256Signer(serviceAccountId, null, credentials.getServiceAccountPrivateKey());
+    signer = new RsaSHA256Signer(serviceAccountId, null, credentials.getRsaPrivateKey());
   }
 
   /**

@@ -38,7 +38,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
     <context-param>
         <param-name>ServiceAccountPrivateKey</param-name>
         <!-- This path is relative to the webapp directory -->
-        <param-value>WEB-INF/classes/yourkey.p12</param-value>
+        <param-value>keys/yourkey.json</param-value>
     </context-param>
     <context-param>
         <param-name>IssuerId</param-name>
@@ -58,11 +58,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
   </context-param>
   <context-param>
       <param-name>OfferClassId</param-name>
-      <param-value>OfferClassMonster3</param-value>
+      <param-value>OfferClass</param-value>
   </context-param>
   <context-param>
       <param-name>OfferObjectId</param-name>
-      <param-value>OfferObjectMonster3</param-value>
+      <param-value>OfferObject</param-value>
   </context-param>
   <context-param>
       <param-name>GiftCardClassId</param-name>

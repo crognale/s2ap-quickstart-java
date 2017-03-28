@@ -45,17 +45,6 @@ public class Offer {
   public static OfferClass generateOfferClass(String issuerId,
       String classId) {
 
-    // Define templates to use
-    List<RenderSpec> renderSpec = new ArrayList<RenderSpec>();
-
-    RenderSpec listRenderSpec = new RenderSpec().setViewName("g_list")
-        .setTemplateFamily("1.offer_list");
-    RenderSpec expandedRenderSpec = new RenderSpec().setViewName("g_expanded")
-        .setTemplateFamily("1.offer_expanded");
-
-    renderSpec.add(listRenderSpec);
-    renderSpec.add(expandedRenderSpec);
-
     // Define the Image Module Data
     List<ImageModuleData> imageModuleData = new ArrayList<ImageModuleData>();
 
@@ -95,6 +84,10 @@ public class Offer {
     locations.add(new LatLongPoint().setLatitude(40.7406578).setLongitude(
         -74.00208940000002));
 
+		//Define hero image
+		Image heroImage = new Image().setSourceUri(new Uri()
+				.setUri("http://farm4.staticflickr.com/3738/12440799783_3dc3c20606_b.jpg"));
+
     OfferClass wobClass = new OfferClass()
         .setId(issuerId + "." + classId)
         .setIssuerName("Baconrista Coffee")
@@ -103,11 +96,13 @@ public class Offer {
         .setTitleImage(
             new Image().setSourceUri(new Uri()
                 .setUri("http://farm4.staticflickr.com/3723/11177041115_6e6a3b6f49_o.jpg")))
-        .setRenderSpecs(renderSpec).setRedemptionChannel("both")
+        .setRedemptionChannel("both")
         .setReviewStatus("underReview")
         .setLinksModuleData(linksModuleData)
         .setImageModulesData(imageModuleData)
         .setTextModulesData(textModulesData)
+				.setHeroImage(heroImage)
+				.setHexBackgroundColor("#5dba67")
         .setLocations(locations).setAllowMultipleUsersPerObject(true);
 
     return wobClass;

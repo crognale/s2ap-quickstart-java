@@ -35,6 +35,12 @@ public class Loyalty {
         .setPointsType("points")
         .setBalance(new LoyaltyPointsBalance().setString("500"));
 
+    // Define Secondary Points
+    LoyaltyPoints secondaryPoints = new LoyaltyPoints()
+        .setLabel("Secondary Points")
+        .setPointsType("points")
+        .setBalance(new LoyaltyPointsBalance().setString("45"));
+
     // Define Text Module Data
     List<TextModuleData> textModulesData = new ArrayList<TextModuleData>();
     TextModuleData textModuleData = new TextModuleData()
@@ -78,6 +84,7 @@ public class Loyalty {
         .setShowLastUpdateTime(true)
         .setLabelValueRows(rows);
 
+
     // Define general messages
     List<WalletObjectMessage> messages = new ArrayList<WalletObjectMessage>();
     WalletObjectMessage message = new WalletObjectMessage()
@@ -96,7 +103,8 @@ public class Loyalty {
         .setState("active").setVersion(1L).setBarcode(barcode).setInfoModuleData(infoModuleData)
         .setAccountName("Jane Doe").setTextModulesData(textModulesData)
         .setMessages(messages).setLinksModuleData(linksModuleData)
-        .setAccountId("1234567890").setLoyaltyPoints(points);
+        .setAccountId("1234567890").setLoyaltyPoints(points)
+				.setSecondaryLoyaltyPoints(secondaryPoints);
 
     return object;
   }
@@ -110,17 +118,6 @@ public class Loyalty {
    */
   public static LoyaltyClass generateLoyaltyClass(String issuerId,
       String classId) {
-
-    // Define rendering templates per view
-    List<RenderSpec> renderSpec = new ArrayList<RenderSpec>();
-
-    RenderSpec listRenderSpec = new RenderSpec().setViewName("g_list")
-        .setTemplateFamily("1.loyalty_list");
-    RenderSpec expandedRenderSpec = new RenderSpec().setViewName("g_expanded")
-        .setTemplateFamily("1.loyalty_expanded");
-
-    renderSpec.add(listRenderSpec);
-    renderSpec.add(expandedRenderSpec);
 
     // Define the Image Module Data
     List<ImageModuleData> imageModuleData = new ArrayList<ImageModuleData>();
@@ -174,6 +171,12 @@ public class Loyalty {
     locations.add(new LatLongPoint().setLatitude(40.7406578).setLongitude(
         -74.00208940000002));
 
+		//Define hero image
+		Image heroImage = new Image().setSourceUri(new Uri()
+				.setUri("http://farm4.staticflickr.com/3738/12440799783_3dc3c20606_b.jpg"));
+
+
+
     // Create class
     LoyaltyClass wobClass = new LoyaltyClass()
         .setId(issuerId + "." + classId)
@@ -188,8 +191,10 @@ public class Loyalty {
         .setLinksModuleData(linksModuleData)
         .setInfoModuleData(infoModuleData)
         .setAccountNameLabel("Member Name").setAccountIdLabel("Member Id")
-        .setRenderSpecs(renderSpec).setMessages(messages)
+        .setMessages(messages)
         .setReviewStatus("underReview").setAllowMultipleUsersPerObject(true)
+				.setHeroImage(heroImage)
+				.setHexBackgroundColor("#5dba67")
         .setLocations(locations);
 
     return wobClass;

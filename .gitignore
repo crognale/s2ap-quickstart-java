@@ -5,5 +5,7 @@ classes/
 .settings
 .git
 *.iml
-key.p12
-yourkey.p12
+*.p12
+web.xml.gen
+web.xml.mine
+*.swp
