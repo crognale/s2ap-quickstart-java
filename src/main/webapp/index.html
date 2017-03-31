@@ -5,33 +5,48 @@
     <title>Hello Wallet Objects</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.1/jquery.min.js"></script>
     <script src="app.js"></script>
+		<style>
+			body {
+				margin-top: 50px;
+				margin-left: 50px;
+				font-family: verdana;
+			}
+			p {
+				margin-left: 50px;
+			}
+		</style>
   </head>
 
   <body>
-    <h1>Hello Wallet Objects</h1>
+    <h1>Save to Android Pay Quickstart</h1>
     <ul id="errors" style="color: red;"></ul>
-
-    <p>Step 1:</p>
+		<h2>Insert Classes:</h2>
+		<p> This should be triggered server-side in production. Note that a Class with a given Class Id
+		may only be inserted once.</p>
+		<p>
     <button id="loyalty">Insert Loyalty Class</button>
     <button id="offer"> Insert Offer Class</button>
     <button id="giftcard">Insert Gift Card Class</button>
+		</p>
+		<br>
     <div id="result"></div>
+		<h2>Save Objects:</h2>
+		<p>
+			<table>
+				<tr>
+					<td>Loyalty:</td>
+					<td><div id="loyaltysave"></div></td>
+				</tr>
+				<tr>
+					<td>Gift Card:</td>
+					<td><div id="giftcardsave"></div></td>
+				</tr>
+				<tr>
+					<td>Offer:</td>
+					<td><div id="offersave"></div></td>
+				</tr>
+			</table>
+		</p>
 
-    <p>Step 2:</p>
-    <div style="display:inline-block;">
-      <span>Save Loyalty:</span>
-      <br />
-      <div style="display:inline" id="loyaltysave"></div>
-    </div>
-    <div style="display:inline-block;">
-      <span>Save Offer:</span>
-      <br />
-      <div style="display:inline" id="offersave"></div>
-    </div>
-    <div style="display:inline-block;">
-      <span>Save Gift Card:</span>
-      <br />
-      <div style="display:inline" id="giftcardsave"></div>
-    </div>
   </body>
 </html>
